@@ -23,9 +23,11 @@ namespace Hotel.WebUI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public List<Hotel.Entities.Hotel> GetAllHotels()
+        public IActionResult GetAllHotels()
         {
-            return _hotelService.GetAllHotels();
+           var hotels= _hotelService.GetAllHotels();
+            return Ok(hotels);
+            //response code olarak 200 dönsün ve body kısmına da bu hotels i ekle
         }
         /// <summary>
         /// Get Hotels By Id
@@ -33,9 +35,14 @@ namespace Hotel.WebUI.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public Hotel.Entities.Hotel GetHotelById(int id)
+        public IActionResult GetHotelById(int id)
         {
-            return _hotelService.GetHotelById(id);
+            var hotel= _hotelService.GetHotelById(id);
+            if (hotel != null)
+            {
+                return Ok(hotel); //hotel bulunduysa 200 dön ve body ye ekle
+            }
+            return NotFound(); //hotel bulunamadıysa 404 dön
         }
         /// <summary>
         /// Create an Hotel
@@ -43,9 +50,11 @@ namespace Hotel.WebUI.Controllers
         /// <param name="hotel"></param>
         /// <returns></returns>
         [HttpPost]
-        public Hotel.Entities.Hotel PostHotel([FromBody]Hotel.Entities.Hotel hotel)
+        public IActionResult PostHotel([FromBody]Hotel.Entities.Hotel hotel)
         {
-            return _hotelService.CreateHotel(hotel);
+            var createdHotel= _hotelService.CreateHotel(hotel);
+            return CreatedAtAction("GetHotelById", new { id = createdHotel.Id }, createdHotel);
+           //dönen response un header kısmında oluşturulan otelin hangi url de oldugu da belirtilir
         }
         /// <summary>
         /// Update the Hotel
@@ -53,18 +62,27 @@ namespace Hotel.WebUI.Controllers
         /// <param name="hotel"></param>
         /// <returns></returns>
         [HttpPut]
-        public Hotel.Entities.Hotel PutHotel([FromBody] Hotel.Entities.Hotel hotel)
+        public IActionResult PutHotel([FromBody] Hotel.Entities.Hotel hotel)
         {
-            return _hotelService.UpdateHotel(hotel);
+            if (_hotelService.GetHotelById(hotel.Id) != null)
+            {
+                return Ok(_hotelService.UpdateHotel(hotel)); // 200 + guncellenen hotel
+            }
+            return NotFound(); //404
         }
         /// <summary>
         /// Delete the Hotel
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete("{id}")]
-        public void DeleteHotel(int id)
+        public IActionResult DeleteHotel(int id)
         {
-            _hotelService.DeleteHotel(id);
+            if (_hotelService.GetHotelById(id) != null)
+            {
+                _hotelService.DeleteHotel(id);
+                return Ok(); // 200
+            }
+            return NotFound(); //404
         }
 
     }
