@@ -2,7 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Nullable></Nullable>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Users\ebru.aras\source\repos\HotelAPI\Hotel.WebUI\Hotel.WebUI.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NSwag.AspNetCore" Version="13.10.1" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Hotel.Business\Hotel.Business.csproj" />
