@@ -22,6 +22,13 @@ namespace Hotel.DataAccess.Concrete
                 return context.Hotels.Find(id);
             }
         }
+        public Hotel.Entities.Hotel GetHotelByName(string name)
+        {
+            using (var context = new HotelDbContext())
+            {
+                return context.Hotels.FirstOrDefault(x=>x.Name.ToLower()==name.ToLower());
+            }
+        }
         public Hotel.Entities.Hotel CreateHotel(Hotel.Entities.Hotel hotel)
         {
             using (var context = new HotelDbContext())

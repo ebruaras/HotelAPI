@@ -20,7 +20,15 @@ namespace Hotel.Business.Concrete
         }
         public Hotel.Entities.Hotel GetHotelById(int id)
         {
-            return _hotelRepository.GetHotelById(id);
+            if (id > 0)
+            {
+                return _hotelRepository.GetHotelById(id);
+            }
+            throw new Exception("id cannot be less than 1");
+        }
+        public Hotel.Entities.Hotel GetHotelByName(string name)
+        {
+            return _hotelRepository.GetHotelByName(name);
         }
         public Hotel.Entities.Hotel CreateHotel(Hotel.Entities.Hotel hotel)
         {

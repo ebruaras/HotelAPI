@@ -23,6 +23,7 @@ namespace Hotel.WebUI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [Route("[action]")]
         public IActionResult GetAllHotels()
         {
            var hotels= _hotelService.GetAllHotels();
@@ -35,6 +36,7 @@ namespace Hotel.WebUI.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
+        [Route("[action]/{id}")]
         public IActionResult GetHotelById(int id)
         {
             var hotel= _hotelService.GetHotelById(id);
@@ -44,12 +46,24 @@ namespace Hotel.WebUI.Controllers
             }
             return NotFound(); //hotel bulunamadıysa 404 dön
         }
+        [HttpGet]
+        [Route("[action]/{name}")]
+        public IActionResult GetHotelByName(string name)
+        {
+            var hotel = _hotelService.GetHotelByName(name);
+            if (hotel != null)
+            {
+                return Ok(hotel); //200 + hotel
+            }
+            return NotFound(); //404
+        }
         /// <summary>
         /// Create an Hotel
         /// </summary>
         /// <param name="hotel"></param>
         /// <returns></returns>
         [HttpPost]
+        [Route("[action]")]
         public IActionResult PostHotel([FromBody]Hotel.Entities.Hotel hotel)
         {
             var createdHotel= _hotelService.CreateHotel(hotel);
@@ -62,6 +76,7 @@ namespace Hotel.WebUI.Controllers
         /// <param name="hotel"></param>
         /// <returns></returns>
         [HttpPut]
+        [Route("[action]")]
         public IActionResult PutHotel([FromBody] Hotel.Entities.Hotel hotel)
         {
             if (_hotelService.GetHotelById(hotel.Id) != null)
@@ -74,7 +89,8 @@ namespace Hotel.WebUI.Controllers
         /// Delete the Hotel
         /// </summary>
         /// <param name="id"></param>
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("[action]/{id}")]
         public IActionResult DeleteHotel(int id)
         {
             if (_hotelService.GetHotelById(id) != null)
