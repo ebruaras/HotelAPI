@@ -24,9 +24,9 @@ namespace Hotel.WebUI.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("[action]")]
-        public IActionResult GetAllHotels()
+        public async Task<IActionResult> GetAllHotels()
         {
-           var hotels= _hotelService.GetAllHotels();
+           var hotels= await _hotelService.GetAllHotels();
             return Ok(hotels);
             //response code olarak 200 dönsün ve body kısmına da bu hotels i ekle
         }
@@ -37,9 +37,9 @@ namespace Hotel.WebUI.Controllers
         /// <returns></returns>
         [HttpGet("{id}")]
         [Route("[action]/{id}")]
-        public IActionResult GetHotelById(int id)
+        public async Task <IActionResult> GetHotelById(int id)
         {
-            var hotel= _hotelService.GetHotelById(id);
+            var hotel= await _hotelService.GetHotelById(id);
             if (hotel != null)
             {
                 return Ok(hotel); //hotel bulunduysa 200 dön ve body ye ekle
@@ -48,9 +48,9 @@ namespace Hotel.WebUI.Controllers
         }
         [HttpGet]
         [Route("[action]/{name}")]
-        public IActionResult GetHotelByName(string name)
+        public async Task<IActionResult> GetHotelByName(string name)
         {
-            var hotel = _hotelService.GetHotelByName(name);
+            var hotel =await _hotelService.GetHotelByName(name);
             if (hotel != null)
             {
                 return Ok(hotel); //200 + hotel
@@ -64,9 +64,9 @@ namespace Hotel.WebUI.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("[action]")]
-        public IActionResult PostHotel([FromBody]Hotel.Entities.Hotel hotel)
+        public async Task<IActionResult> PostHotel([FromBody]Hotel.Entities.Hotel hotel)
         {
-            var createdHotel= _hotelService.CreateHotel(hotel);
+            var createdHotel=await _hotelService.CreateHotel(hotel);
             return CreatedAtAction("GetHotelById", new { id = createdHotel.Id }, createdHotel);
            //dönen response un header kısmında oluşturulan otelin hangi url de oldugu da belirtilir
         }
@@ -77,11 +77,11 @@ namespace Hotel.WebUI.Controllers
         /// <returns></returns>
         [HttpPut]
         [Route("[action]")]
-        public IActionResult PutHotel([FromBody] Hotel.Entities.Hotel hotel)
+        public async Task<IActionResult> PutHotel([FromBody] Hotel.Entities.Hotel hotel)
         {
-            if (_hotelService.GetHotelById(hotel.Id) != null)
+            if (await _hotelService.GetHotelById(hotel.Id) != null)
             {
-                return Ok(_hotelService.UpdateHotel(hotel)); // 200 + guncellenen hotel
+                return Ok(await _hotelService.UpdateHotel(hotel)); // 200 + guncellenen hotel
             }
             return NotFound(); //404
         }
@@ -91,11 +91,11 @@ namespace Hotel.WebUI.Controllers
         /// <param name="id"></param>
         [HttpDelete]
         [Route("[action]/{id}")]
-        public IActionResult DeleteHotel(int id)
+        public async Task<IActionResult> DeleteHotel(int id)
         {
-            if (_hotelService.GetHotelById(id) != null)
+            if (await _hotelService.GetHotelById(id) != null)
             {
-                _hotelService.DeleteHotel(id);
+                await _hotelService.DeleteHotel(id);
                 return Ok(); // 200
             }
             return NotFound(); //404
